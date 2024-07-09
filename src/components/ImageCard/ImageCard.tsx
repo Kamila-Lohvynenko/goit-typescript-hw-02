@@ -1,13 +1,6 @@
 import css from './ImageCard.module.css';
-const ImageCard = ({
-  // image: {
-  //   alt_description,
-  //   urls: { small, regular },
-  //   user: { name, profile_image },
-  // },
-  image,
-  openModal,
-}) => {
+import { ImageCardProps } from './ImageCard.types';
+const ImageCard: React.FC<ImageCardProps> = ({ image, openModal }) => {
   const handleClick = () => {
     openModal(image);
   };

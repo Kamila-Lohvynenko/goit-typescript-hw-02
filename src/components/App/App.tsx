@@ -1,24 +1,25 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import SearchBar from './SearchBar/SearchBar';
-import { fetchImages } from '../api';
-import ImageGallery from './ImageGallery/ImageGallery';
-import Loader from './Loader/Loader';
-import ErrorMessage from './ErrorMessage/ErrorMessage';
-import LoadMoreBtn from './LoadMoreBtn/LoadMoreBtn';
-import CustomModal from './ImageModal/ImageModal';
+import { fetchImages } from '../../api/api';
+import ImageGallery from '../ImageGallery/ImageGallery';
+import Loader from '../Loader/Loader';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
+import CustomModal from '../ImageModal/ImageModal';
 import { Toaster } from 'react-hot-toast';
+import { IImage } from '../../api/api.types';
+import SearchBar from '../SearchBar/SearchBar';
 
 function App() {
-  const [query, setQuery] = useState('');
-  const [images, setImages] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [showLoadMore, setShowLoadMore] = useState(false);
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [notFound, setNotFound] = useState(false);
+  const [query, setQuery] = useState<string>('');
+  const [images, setImages] = useState<IImage[]>([]);
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [showLoadMore, setShowLoadMore] = useState<boolean>(false);
+  const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+  const [selectedImage, setSelectedImage] = useState<IImage | null>(null);
+  const [notFound, setNotFound] = useState<boolean>(false);
 
   useEffect(() => {
     if (query === '') {
@@ -30,9 +31,11 @@ function App() {
         setError(false);
         const data = await fetchImages(query, page);
         setImages(prevImages => {
+          // console.log([...prevImages, ...data.results]);
+
           return [...prevImages, ...data.results];
         });
-        setShowLoadMore(data.total_pages && data.total_pages !== page);
+        setShowLoadMore((data.total_pages && data.total_pages) !== page);
         setNotFound(data.total_pages === 0);
       } catch {
         setError(true);
@@ -43,21 +46,21 @@ function App() {
     getData();
   }, [page, query]);
 
-  const handleSearch = query => {
+  const handleSearch = (query: string): void => {
     setQuery(query);
     setPage(1);
     setImages([]);
   };
 
-  const handleLoadMore = () => {
+  const handleLoadMore = (): void => {
     setPage(page + 1);
   };
 
-  const handleOpenModal = image => {
+  const handleOpenModal = (image: IImage): void => {
     setSelectedImage(image);
     setIsOpen(true);
   };
-  const handleCloseModal = () => {
+  const handleCloseModal = (): void => {
     setIsOpen(false);
     setSelectedImage(null);
   };

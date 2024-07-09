@@ -1,10 +1,16 @@
-import { Field, Form, Formik } from 'formik';
+import { Field, Form, Formik, FormikHelpers } from 'formik';
 import { CiSearch } from 'react-icons/ci';
 import css from './SearchBar.module.css';
 import { toast } from 'react-hot-toast';
+import { FormValues, SearchBarProps } from './SearchBar.types';
 
-const SearchBar = ({ onSearch }) => {
-  const handleSubmit = (values, actions) => {
+const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
+  const handleSubmit = (
+    values: FormValues,
+    actions: FormikHelpers<FormValues>
+  ) => {
+    console.log(actions);
+
     if (!values.query.trim()) {
       toast.error('Enter please at least 1 symbol to start searching');
       return;
